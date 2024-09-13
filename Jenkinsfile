@@ -1,16 +1,14 @@
 pipeline {
   agent any
 
-
   tools {
     nodejs 'nodejs-22-6-0'
   }
 
   stages {
-    stage('Print Version') {
+    stage('Install Dependencies') {
       steps {
-        sh 'npm -v'
-        sh 'node -v'
+        sh 'npm install --no-audit'
       }
     }
   }
