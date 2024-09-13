@@ -9,6 +9,7 @@ pipeline {
     MONGO_URI = 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
     MONGO_USERNAME = credentials('mongo-db-username')
     MONGO_PASSWORD = credentials('mongo-db-password')
+    SONAR_SCANNER_HOME = tool 'sonarqube-scanner-610'
   }
 
   stages {
@@ -53,6 +54,19 @@ pipeline {
         catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
             sh 'npm run coverage'
         }
+      }
+    }
+
+ stage('SonarQube - SAST') {
+      steps {
+        sh '''
+          sonar-scanner \
+            -Dsonar.projectKey=solar-system-lab \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+            -Dsonar.login=sqp_3162e8f82cb55cb33ff415e217914e72b0db33d9
+        '''
       }
     }
 
