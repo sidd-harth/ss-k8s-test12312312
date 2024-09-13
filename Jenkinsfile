@@ -61,11 +61,11 @@ pipeline {
       steps {
         sh '''
           $SONAR_SCANNER_HOME/bin/sonar-scanner \
-            -Dsonar.projectKey=solar-system-lab \
+            -Dsonar.projectKey=ss2 \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-            -Dsonar.login=sqp_3162e8f82cb55cb33ff415e217914e72b0db33d9
+            -Dsonar.login=sqp_862e723e1e4a48071e34d857775a93056eecf305
         '''
       }
     }
