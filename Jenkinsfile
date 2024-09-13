@@ -16,7 +16,7 @@ pipeline {
     parallel {
       stage('NPM Dependency Audit') {
         steps {
-          sh 'npm audit'
+          sh 'npm audit --audit-level=critical'
         }
       }
 
@@ -28,6 +28,10 @@ pipeline {
             --format \'ALL\' 
             --disableYarnAudit
             --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10')
+            dependencyCheckPublisher(failedTotalCritical: 1, 
+                failedTotalHigh: 1, 
+                pattern: 'dependency-check-report.xml', 
+                stopBuild: true)
         }
       }
     }
