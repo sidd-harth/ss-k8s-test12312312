@@ -36,4 +36,8 @@ pipeline {
     }
   }
   }
+   post {
+    always {
+      publishHTML(allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', useWrapperFileDirectly: true)
+    }
 }
