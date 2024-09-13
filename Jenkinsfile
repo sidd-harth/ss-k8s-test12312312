@@ -60,7 +60,7 @@ pipeline {
  stage('SonarQube - SAST') {
       steps {
         sh '''
-          sonar-scanner \
+          $SONAR_SCANNER_HOME/bin/sonar-scanner \
             -Dsonar.projectKey=solar-system-lab \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://localhost:9000 \
