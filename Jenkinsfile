@@ -52,6 +52,8 @@ pipeline {
     post {
       always {
         publishHTML(allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', useWrapperFileDirectly: true)
+
+        junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
       }
     }
   }
