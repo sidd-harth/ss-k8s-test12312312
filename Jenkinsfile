@@ -85,9 +85,8 @@ pipeline {
       steps {
         sh  ''' 
               trivy image siddharth67/solar-system:$GIT_COMMIT \
-              --severity CRITICAL \
+              --severity HIGH,CRITICAL \
               --exit-code 1 \
-              --quiet \
               --format json -o trivy-image-CRITICAL-results.json
             '''
       }
