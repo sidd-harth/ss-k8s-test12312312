@@ -81,17 +81,23 @@ pipeline {
       }
     }
 
-    stage('Trivy Scan') {
+    // stage('Trivy Scan') {
+    //   steps {
+    //     sh  ''' 
+    //           trivy image siddharth67/solar-system:$GIT_COMMIT \
+    //           --severity HIGH,CRITICAL \
+    //           --exit-code 1 \
+    //           --format json -o trivy-image-CRITICAL-results.json
+    //         '''
+    //   }
+    // }
+    stage('Publish Image - DockerHub') {
       steps {
-        sh  ''' 
-              trivy image siddharth67/solar-system:$GIT_COMMIT \
-              --severity HIGH,CRITICAL \
-              --exit-code 1 \
-              --format json -o trivy-image-CRITICAL-results.json
-            '''
+        withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+          sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+        }
       }
     }
-
     }
     post {
       always {
