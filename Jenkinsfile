@@ -91,10 +91,34 @@ pipeline {
     //         '''
     //   }
     // }
-    stage('Publish Image - DockerHub') {
+   //  stage('Publish Image - DockerHub') {
+//       steps {
+//         withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+//           sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+//         }
+//       }
+//     }
+
+    stage('Upload - AWS S3') {
       steps {
-        withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-          sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
+          sh  '''
+              ls -ltr
+              mkdir reports-$BUILD_ID
+              cp -rf coverage/ reports-$BUILD_ID/
+              cp test-results.xml reports-$BUILD_ID/
+              ls -ltr reports-$BUILD_ID/
+            '''
+          s3Upload(
+              file: "reports-$BUILD_ID", 
+              bucket:'solar-system-jenkins-reports-bucket', 
+              path:"jenkins-$BUILD_ID/",
+              metadatas: [
+                "repo:${env.JOB_NAME}", 
+                "branch:${env.BRANCH}", 
+                "commit:${env.GIT_COMMIT}"
+                ]
+            )
         }
       }
     }
@@ -107,10 +131,10 @@ pipeline {
 
         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
 
-        sh ''' trivy convert \
-                --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
-                --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
-          '''
+        // sh ''' trivy convert \
+        //         --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+        //         --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
+        //   '''
         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
       }
     }
