@@ -64,9 +64,7 @@ pipeline {
           $SONAR_SCANNER_HOME/bin/sonar-scanner \
             -Dsonar.projectKey=ss2 \
             -Dsonar.sources=. \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-            -Dsonar.login=sqp_862e723e1e4a48071e34d857775a93056eecf305
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
         '''
       }
       timeout(time: 5, unit: 'MINUTES') {
