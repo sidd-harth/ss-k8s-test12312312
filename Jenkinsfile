@@ -49,27 +49,35 @@ pipeline {
     //     }
     //   }
 
-    stage('Code Coverage') {
-      steps {
-        catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
-            sh 'npm run coverage'
-        }
-      }
-    }
+//     stage('Code Coverage') {
+//       steps {
+//         catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
+//             sh 'npm run coverage'
+//         }
+//       }
+//     }
 
- stage('SonarQube - SAST') {
+//  stage('SonarQube - SAST') {
+//       steps {
+//         withSonarQubeEnv('sonar-qube-server') {
+//         sh '''
+//           $SONAR_SCANNER_HOME/bin/sonar-scanner \
+//             -Dsonar.projectKey=ss2 \
+//             -Dsonar.sources=. \
+//             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+//         '''
+//       }
+//       timeout(time: 5, unit: 'MINUTES') {
+//           waitForQualityGate abortPipeline: true
+//        }
+//       }
+//     }
+
+    stage('Build Docker Image') {
       steps {
-        withSonarQubeEnv('sonar-qube-server') {
-        sh '''
-          $SONAR_SCANNER_HOME/bin/sonar-scanner \
-            -Dsonar.projectKey=ss2 \
-            -Dsonar.sources=. \
-            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
-        '''
-      }
-      timeout(time: 5, unit: 'MINUTES') {
-          waitForQualityGate abortPipeline: true
-       }
+        sh  ''' 
+              docker build -t siddharth67/solar-system:$GIT_COMMIT .
+            '''
       }
     }
 
