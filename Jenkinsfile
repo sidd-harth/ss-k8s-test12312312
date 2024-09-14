@@ -13,11 +13,11 @@ pipeline {
   }
 
   stages {
-    stage('Install Dependencies') {
-      steps {
-        sh 'npm install --no-audit'
-      }
-    }
+  //  stage('Install Dependencies') {
+   //   steps {
+    //    sh 'npm install --no-audit'
+     // }
+   // }
 
     // stage('Dependency Scanning') {
     //   parallel {
@@ -101,7 +101,7 @@ pipeline {
 
     stage('Upload - AWS S3') {
       steps {
-        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
+        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localstack:4566', region: 'us-east-1') {
           sh  '''
               ls -ltr
               mkdir reports-$BUILD_ID
