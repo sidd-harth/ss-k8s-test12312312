@@ -59,6 +59,7 @@ pipeline {
 
  stage('SonarQube - SAST') {
       steps {
+        withSonarQubeEnv('sonar-qube-server') {
         sh '''
           $SONAR_SCANNER_HOME/bin/sonar-scanner \
             -Dsonar.projectKey=ss2 \
@@ -67,6 +68,10 @@ pipeline {
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
             -Dsonar.login=sqp_862e723e1e4a48071e34d857775a93056eecf305
         '''
+      }
+      timeout(time: 5, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+      }
       }
     }
 
