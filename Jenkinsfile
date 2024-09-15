@@ -113,13 +113,7 @@ pipeline {
               file: "reports-$BUILD_ID", 
               bucket:'solar-system-jenkins-reports-bucket', 
               path:"jenkins-$BUILD_ID/",
-              pathStyleAccessEnabled: true,
-              metadatas: [
-                "repo:${env.JOB_NAME}", 
-                "branch:${env.BRANCH}", 
-                "commit:${env.GIT_COMMIT}"
-                ]
-            )
+              pathStyleAccessEnabled: true
         }
       }
     }
