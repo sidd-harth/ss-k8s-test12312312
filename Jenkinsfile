@@ -114,6 +114,7 @@ pipeline {
               bucket:'solar-system-jenkins-reports-bucket', 
               path:"jenkins-$BUILD_ID/",
               pathStyleAccessEnabled: true
+          )
         }
       }
     }
