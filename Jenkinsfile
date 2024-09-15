@@ -73,13 +73,13 @@ pipeline {
 //       }
 //     }
 
-    stage('Build Docker Image') {
-      steps {
-        sh  ''' 
-              docker build -t siddharth67/solar-system:$GIT_COMMIT .
-            '''
-      }
-    }
+//    stage('Build Docker Image') {
+//      steps {
+//        sh  ''' 
+//              docker build -t siddharth67/solar-system:$GIT_COMMIT .
+//            '''
+ //     }
+ //   }
 
     // stage('Trivy Scan') {
     //   steps {
@@ -101,7 +101,7 @@ pipeline {
 
     stage('Upload - AWS S3') {
       steps {
-        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localstack:4566', region: 'us-east-1') {
+        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
           sh  '''
               ls -ltr
               mkdir reports-$BUILD_ID
