@@ -129,9 +129,8 @@ pipeline {
 
      stage('Integration Testing - EC2') {
       steps {
-          sh '''
-              sh 'printenv'
-            '''
+          sh 'printenv'
+          
         }  
     }
     }
