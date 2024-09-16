@@ -153,20 +153,20 @@ pipeline {
 
     stage('Update and Commit Image Tag') {
       steps {
-        sh 'll'
+        sh 'ls .'
         sh 'git clone -b main http://192.168.0.104:5555/dasher-org/solar-system-gitops-argocd'
-        sh 'll'
+        sh 'ls .'
         dir("solar-system-gitops-argocd/kubernetes") {
           sh '''
-            ll ../
+            ls ../
             git checkout main
-            ll ../
+            ls ../
             git checkout -b feature-$BUILD_ID
-            ll ../
+            ls ../
             sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml
-            ll ../
+            ls ../
             cat deployment.yml
-            ll ../
+            ls ../
             git config --global --unset-all user.name
             git config --global user.email "jenkins@dasher.com"
             git remote set-url origin http://$GITEA_TOKEN@192.168.0.104:5555/dasher-org/solar-system-gitops-argocd
