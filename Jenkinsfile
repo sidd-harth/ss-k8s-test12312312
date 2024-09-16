@@ -155,10 +155,10 @@ pipeline {
         sh 'git clone -b main http://localhost:3000/backup-org/solar-system-gitops-argocd'
         dir("solar-system-gitops-argocd/kubernetes") {
           sh '''
-            git checkout main'
-            git checkout -b feature-$BUILD_ID'
-            sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml'
-            cat deployment.yml'
+            git checkout main
+            git checkout -b feature-$BUILD_ID
+            sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml
+            cat deployment.yml
             git config --global user.email "jenkins@dasher.com"
             git remote set-url origin http://$GITEA_TOKEN@192.168.0.104:5555/dasher-org/solar-system-gitops-argocd
             git checkout feature-$BUILD_ID
