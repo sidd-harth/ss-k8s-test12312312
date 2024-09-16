@@ -22,6 +22,9 @@ pipeline {
  }
 }
     stage('Deploy to Prod?') {
+      when {
+        branch 'main'
+      }
       steps {
         timeout(time: 1, unit: 'DAYS') {
           input message: 'Is the PR Merged and ArgoCD Synced?', ok: 'YES! PR is Merged and ArgoCD Application is Synced', submitter: 'admin'
@@ -101,13 +104,13 @@ pipeline {
     //   }
     // }
 
-    // stage('Publish Image - DockerHub') {
-    //   steps {
-    //     withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-    //       sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
-    //     }
-    //   }
-    // }
+        stage('Publish Image - DockerHub') {
+      steps {
+        withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+          sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+        }
+      }
+    }
 
     // stage('Upload - AWS S3') {
     //   steps {
@@ -137,25 +140,6 @@ pipeline {
  //       }  
  //   }
 
-     stage('FEATURE') {
-      when {
-        branch 'feature/*'
-      }
-      steps {
-          sh 'printenv'
-          
-        }  
-    }
-
-         stage('PR') {
-      when {
-        branch 'PR*'
-      }
-      steps {
-          sh 'printenv'
-          
-        }  
-    }
 
     //      stage('Integration Testing - EC2222222222222') {
     //   when {
