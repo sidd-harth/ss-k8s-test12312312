@@ -15,13 +15,13 @@ pipeline {
   }
 
   stages {
-//   stage('Install Dependencies') {
- //    steps {
-  //    sh 'ls .'
-   //    sh 'npm install --no-audit'
-    //   sh 'ls .'
-    // }
-  // }
+  stage('Install Dependencies') {
+    steps {
+    sh 'ls .'
+    sh 'npm install --no-audit'
+   sh 'ls .'
+ }
+}
 
     // stage('Dependency Scanning') {
     //   parallel {
@@ -210,7 +210,7 @@ pipeline {
     post {
       always {
         script {
-            if (fileExists('solar-system-gitops-argocd')) {
+            if (fileExists('solar-system-gitops-argocd22222222222222222222')) {
             sh 'rm -rf solar-system-gitops-argocd'
             }
         }
