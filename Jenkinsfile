@@ -17,9 +17,8 @@ pipeline {
   stages {
   stage('Install Dependencies') {
     steps {
-    sh 'ls .'
+      sh 'printenv'
     sh 'npm install --no-audit'
-   sh 'ls .'
  }
 }
 
@@ -80,9 +79,7 @@ pipeline {
    stage('Build Docker Image') {
      steps {
        sh  ''' 
-              ls .
              docker build -t siddharth67/solar-system:$GIT_COMMIT .
-             ls .
            '''
      }
    }
@@ -97,15 +94,14 @@ pipeline {
     //         '''
     //   }
     // }
-    stage('Publish Image - DockerHub') {
-      steps {
-        sh 'ls .'
-        withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-          sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
-        }
-        sh 'ls .'
-      }
-    }
+
+    // stage('Publish Image - DockerHub') {
+    //   steps {
+    //     withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+    //       sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+    //     }
+    //   }
+    // }
 
     // stage('Upload - AWS S3') {
     //   steps {
@@ -135,15 +131,15 @@ pipeline {
  //       }  
  //   }
 
-    //  stage('Integration Testing - EC2') {
-    //   when {
-    //     branch 'feature/*'
-    //   }
-    //   steps {
-    //       sh 'printenv'
+     stage('Integration Testing - EC2') {
+      when {
+        branch 'feature/*'
+      }
+      steps {
+          sh 'printenv'
           
-    //     }  
-    // }
+        }  
+    }
 
     //      stage('Integration Testing - EC2222222222222') {
     //   when {
@@ -157,60 +153,53 @@ pipeline {
     //     }  
     // }
 
-    stage('Update and Commit Image Tag') {
-      steps {
-        sh 'ls .'
-        sh 'git clone -b main http://192.168.0.104:5555/dasher-org/solar-system-gitops-argocd'
-        sh 'ls .'
-        dir("solar-system-gitops-argocd/kubernetes") {
-          sh '''
-            ls ../../
-            git checkout main
-            ls ../../
-            git checkout -b feature-$BUILD_ID
-            ls ../../
-            sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml
-            ls ../../
-            cat deployment.yml
-            ls ../../
-            git config --global --unset-all user.name
-            git config --global user.email "jenkins@dasher.com"
-            git remote set-url origin http://$GITEA_TOKEN@192.168.0.104:5555/dasher-org/solar-system-gitops-argocd
-            git checkout feature-$BUILD_ID
-            git add .
-            git commit -am "Updated docker image"
-            git push -u origin feature-$BUILD_ID
-          '''
-        }
-      }
-    }
+//stage('Update and Commit Image Tag') {
+//     steps {
+//       sh 'git clone -b main http://192.168.0.104:5555/dasher-org/solar-system-gitops-argocd'
+//       dir("solar-system-gitops-argocd/kubernetes") {
+//         sh '''
+//           git checkout main
+//           git checkout -b feature-$BUILD_ID
+//           sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml
+//           cat deployment.yml
+// git config --global --unset-all user.name
+// git config --global user.email "jenkins@dasher.com"
+// git remote set-url origin http://$GITEA_TOKEN@192.168.0.104:5555/dasher-org/solar-system-gitops-argocd
+// git checkout feature-$BUILD_ID
+// git add .
+// git commit -am "Updated docker image"
+// git push -u origin feature-$BUILD_ID
+//         '''
+//       }
+//     }
+//   }
 
-    stage('Kubernetes Deployment - Raise PR') {
-      steps {
-        sh """
-          curl -X 'POST' \
-            'http://192.168.0.104:5555/api/v1/repos/dasher-org/solar-system-gitops-argocd/pulls' \
-            -H 'accept: application/json' \
-            -H 'Authorization: token $GITEA_TOKEN' \
-            -H 'Content-Type: application/json' \
-            -d '{
-            "assignee": "dasher-admin",
-            "assignees": [
-              "dasher-admin"
-            ],
-            "base": "main",
-            "body": "Updated docker image in deployment manifest",
-            "head": "feature-$BUILD_ID",
-            "title": "Updated Docker Image"
-          }'
-        """
-      }
-    } 
+// stage('Kubernetes Deployment - Raise PR') {
+//     steps {
+//       sh """
+//         curl -X 'POST' \
+//           'http://192.168.0.104:5555/api/v1/repos/dasher-org/solar-system-gitops-argocd/pulls' \
+//           -H 'accept: application/json' \
+//           -H 'Authorization: token $GITEA_TOKEN' \
+//           -H 'Content-Type: application/json' \
+//           -d '{
+//           "assignee": "dasher-admin",
+//           "assignees": [
+//             "dasher-admin"
+//           ],
+//           "base": "main",
+//           "body": "Updated docker image in deployment manifest",
+//           "head": "feature-$BUILD_ID",
+//           "title": "Updated Docker Image"
+//         }'
+//       """
+//     }
+//   } 
     }
     post {
       always {
         script {
-            if (fileExists('solar-system-gitops-argocd22222222222222222222')) {
+            if (fileExists('solar-system-gitops-argocd')) {
             sh 'rm -rf solar-system-gitops-argocd'
             }
         }
