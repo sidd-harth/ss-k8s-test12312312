@@ -21,7 +21,17 @@ pipeline {
     sh 'npm install --no-audit'
  }
 }
-
+    stage('Deploy to Prod?') {
+      steps {
+        timeout(time: 1, unit: 'DAYS') {
+          input {
+              message 'Is the PR Merged and ArgoCD Synced?'
+              ok 'YES! PR is Merged and ArgoCD Application is Synced'
+              submitter 'admin'
+            }
+        }
+      }
+    }
     // stage('Dependency Scanning') {
     //   parallel {
     //     stage('NPM Dependency Audit') {
