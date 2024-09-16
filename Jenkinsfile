@@ -131,9 +131,19 @@ pipeline {
  //       }  
  //   }
 
-     stage('Integration Testing - EC2') {
+     stage('FEATURE') {
       when {
         branch 'feature/*'
+      }
+      steps {
+          sh 'printenv'
+          
+        }  
+    }
+
+         stage('PR) {
+      when {
+        branch 'PR*'
       }
       steps {
           sh 'printenv'
