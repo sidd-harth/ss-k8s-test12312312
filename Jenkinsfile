@@ -141,9 +141,9 @@ pipeline {
         }  
     }
 
-         stage('PR) {
+         stage('PR') {
       when {
-        branch "PR*"
+        branch 'PR*'
       }
       steps {
           sh 'printenv'
