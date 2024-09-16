@@ -4,8 +4,8 @@ echo "Intergation test........"
 URL=3.140.244.188
 
 if [[ "$URL" != '' ]]; then
-    http_code=$(curl -s -o /dev/null -w "%{http_code}" http://$URL:3000/live)
-    planet_data=$(curl -s -XPOST http://$URL:3000/planet -H "Content-Type: application/json" -d '{"id": "3"}')
+    http_code=$(curl -s -o /dev/null -w "%{http_code}" http://$URL:3333/live)
+    planet_data=$(curl -s -XPOST http://$URL:3333/planet -H "Content-Type: application/json" -d '{"id": "3"}')
     planet_name=$(echo $planet_data | jq .name -r)
 
     if [[ "$http_code" -eq 200 && "$planet_name" -eq "Earth"  ]]; 
