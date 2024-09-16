@@ -15,22 +15,42 @@ pipeline {
   }
 
   stages {
-  stage('Install Dependencies') {
-    steps {
-      sh 'printenv'
-    sh 'npm install --no-audit'
- }
-}
-    stage('Deploy to Prod?') {
-      when {
-        branch 'main'
-      }
+
+    stage('DAST - OWASP ZAP') {
       steps {
-        timeout(time: 1, unit: 'DAYS') {
-          input message: 'Is the PR Merged and ArgoCD Synced?', ok: 'YES! PR is Merged and ArgoCD Application is Synced', submitter: 'admin'
-        }
+        sh '''
+          #### REPLACE below with Kubernetes http://IP_Address:30000/api-docs/ #####
+          echo $(id -u):$(id -g)
+          chmod 777 $(pwd)
+          echo $(id -u):$(id -g)
+          docker run -v $(pwd):/zap/wrk/:rw  ghcr.io/zaproxy/zaproxy zap-api-scan.py \
+            -t http://3.140.244.188:3333/api-docs/ \
+            -f openapi \
+            -r zap_report.html \
+            -w zap_report.md \
+            -J zap_json_report.json \
+            -x zap_xml_report.xml
+        '''
       }
-    }
+    }  
+  }
+
+  // stage('Install Dependencies') {
+//     steps {
+//       sh 'printenv'
+//     sh 'npm install --no-audit'
+//  }
+// }
+//     stage('Deploy to Prod?') {
+//       when {
+//         branch 'main'
+//       }
+//       steps {
+//         timeout(time: 1, unit: 'DAYS') {
+//           input message: 'Is the PR Merged and ArgoCD Synced?', ok: 'YES! PR is Merged and ArgoCD Application is Synced', submitter: 'admin'
+//         }
+//       }
+//     }
     // stage('Dependency Scanning') {
     //   parallel {
     //     stage('NPM Dependency Audit') {
@@ -85,13 +105,14 @@ pipeline {
 //       }
 //     }
 
-   stage('Build Docker Image') {
-     steps {
-       sh  ''' 
-             docker build -t siddharth67/solar-system:$GIT_COMMIT .
-           '''
-     }
-   }
+  //  stage('Build Docker Image') {
+  //    steps {
+  //      sh  ''' 
+  //            docker build -t siddharth67/solar-system:$GIT_COMMIT .
+  //          '''
+  //    }
+  //  }
+
 
     // stage('Trivy Scan') {
     //   steps {
@@ -103,14 +124,13 @@ pipeline {
     //         '''
     //   }
     // }
-
-        stage('Publish Image - DockerHub') {
-      steps {
-        withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-          sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
-        }
-      }
-    }
+    //     stage('Publish Image - DockerHub') {
+    //   steps {
+    //     withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+    //       sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+    //     }
+    //   }
+    // }
 
     // stage('Upload - AWS S3') {
     //   steps {
