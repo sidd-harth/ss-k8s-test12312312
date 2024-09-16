@@ -25,9 +25,9 @@ pipeline {
       steps {
         timeout(time: 1, unit: 'DAYS') {
           input 
-              message 'Is the PR Merged and ArgoCD Synced?',
-              ok 'YES! PR is Merged and ArgoCD Application is Synced',
-              submitter 'admin'
+              message: 'Is the PR Merged and ArgoCD Synced?',
+              ok: 'YES! PR is Merged and ArgoCD Application is Synced',
+              submitter: 'admin'
         }
       }
     }
