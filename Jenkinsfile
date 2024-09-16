@@ -19,6 +19,7 @@ pipeline {
      steps {
       sh 'ls .'
        sh 'npm install --no-audit'
+       sh 'ls .'
      }
    }
 
@@ -79,7 +80,9 @@ pipeline {
    stage('Build Docker Image') {
      steps {
        sh  ''' 
+              ls .
              docker build -t siddharth67/solar-system:$GIT_COMMIT .
+             ls .
            '''
      }
    }
@@ -96,9 +99,11 @@ pipeline {
     // }
     stage('Publish Image - DockerHub') {
       steps {
+        sh 'ls .'
         withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
           sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
         }
+        sh 'ls .'
       }
     }
 
