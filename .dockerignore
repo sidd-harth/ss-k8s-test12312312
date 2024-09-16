@@ -20,3 +20,9 @@ solar-system.png
 .talismanrc
 coverage
 test-results.xml
+#reports
+reports*
+zap*
+dependency*
+jenkins*
+trivy-image*
