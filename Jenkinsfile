@@ -130,6 +130,18 @@ pipeline {
      stage('Integration Testing - EC2') {
       when {
                 expression {
+                    env.GIT_BRANCH.startsWith('main')
+                }
+            }
+      steps {
+          sh 'printenv'
+          
+        }  
+    }
+
+         stage('Integration Testing - EC2') {
+      when {
+                expression {
                     env.GIT_BRANCH.startsWith('feature')
                 }
             }
