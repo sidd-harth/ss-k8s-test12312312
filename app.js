@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs')
 const express = require('express');
 const OS = require('os');
 const bodyParser = require('body-parser');
@@ -57,7 +58,17 @@ app.get('/',   async (req, res) => {
     res.sendFile(path.join(__dirname, '/', 'index.html'));
 });
 
-
+app.get('/api-docs', (req, res) => {
+    fs.readFile('oas.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error('Error reading file:', err);
+        res.status(500).send('Error reading file');
+      } else {
+        res.json(JSON.parse(data));
+      }
+    });
+  });
+  
 app.get('/os',   function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.send({
