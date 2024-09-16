@@ -20,20 +20,15 @@ pipeline {
       steps {
         sh '''
           #### REPLACE below with Kubernetes http://IP_Address:30000/api-docs/ #####
-          echo $(id -u):$(id -g)
-          chmod 777 $(pwd)
-          echo $(id -u):$(id -g)
           docker run -v $(pwd):/zap/wrk/:rw  ghcr.io/zaproxy/zaproxy zap-api-scan.py \
-            -t http://3.140.244.188:3333/api-docs/ \
+            -t https://815f-49-206-36-222.ngrok-free.app/api-docs/ \
             -f openapi \
             -r zap_report.html \
             -w zap_report.md \
-            -J zap_json_report.json \
-            -x zap_xml_report.xml
+            -J zap_json_report.json
         '''
       }
     }  
-  }
 
   // stage('Install Dependencies') {
 //     steps {
