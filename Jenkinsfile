@@ -233,6 +233,8 @@ pipeline {
         //         --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
         //   '''
         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
+
+        cleanWs()
       }
     }
   }
