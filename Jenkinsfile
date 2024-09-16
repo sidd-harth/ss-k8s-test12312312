@@ -19,6 +19,9 @@ pipeline {
     stage('DAST - OWASP ZAP') {
       steps {
         sh '''
+                  echo $(id -u):$(id -g)
+          chmod 777 $(pwd)
+          echo $(id -u):$(id -g)  
           #### REPLACE below with Kubernetes http://IP_Address:30000/api-docs/ #####
           docker run -v $(pwd):/zap/wrk/:rw  ghcr.io/zaproxy/zaproxy zap-api-scan.py \
             -t https://815f-49-206-36-222.ngrok-free.app/api-docs/ \
