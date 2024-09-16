@@ -15,13 +15,13 @@ pipeline {
   }
 
   stages {
-   stage('Install Dependencies') {
-     steps {
-      sh 'ls .'
-       sh 'npm install --no-audit'
-       sh 'ls .'
-     }
-   }
+//   stage('Install Dependencies') {
+ //    steps {
+  //    sh 'ls .'
+   //    sh 'npm install --no-audit'
+    //   sh 'ls .'
+    // }
+  // }
 
     // stage('Dependency Scanning') {
     //   parallel {
