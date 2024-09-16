@@ -17,6 +17,7 @@ pipeline {
   stages {
    stage('Install Dependencies') {
      steps {
+      sh 'ls .'
        sh 'npm install --no-audit'
      }
    }
@@ -158,15 +159,15 @@ pipeline {
         sh 'ls .'
         dir("solar-system-gitops-argocd/kubernetes") {
           sh '''
-            ls ../
+            ls ../../
             git checkout main
-            ls ../
+            ls ../../
             git checkout -b feature-$BUILD_ID
-            ls ../
+            ls ../../
             sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml
-            ls ../
+            ls ../../
             cat deployment.yml
-            ls ../
+            ls ../../
             git config --global --unset-all user.name
             git config --global user.email "jenkins@dasher.com"
             git remote set-url origin http://$GITEA_TOKEN@192.168.0.104:5555/dasher-org/solar-system-gitops-argocd
