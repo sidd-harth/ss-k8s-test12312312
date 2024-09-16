@@ -10,14 +10,15 @@ pipeline {
     MONGO_USERNAME = credentials('mongo-db-username')
     MONGO_PASSWORD = credentials('mongo-db-password')
     SONAR_SCANNER_HOME = tool 'sonarqube-scanner-610'
+    GITEA_TOKEN = credentials('gitea-api-token')
   }
 
   stages {
-  //  stage('Install Dependencies') {
-   //   steps {
-    //    sh 'npm install --no-audit'
-     // }
-   // }
+   stage('Install Dependencies') {
+     steps {
+       sh 'npm install --no-audit'
+     }
+   }
 
     // stage('Dependency Scanning') {
     //   parallel {
@@ -73,13 +74,13 @@ pipeline {
 //       }
 //     }
 
-//    stage('Build Docker Image') {
-//      steps {
-//        sh  ''' 
-//              docker build -t siddharth67/solar-system:$GIT_COMMIT .
-//            '''
- //     }
- //   }
+   stage('Build Docker Image') {
+     steps {
+       sh  ''' 
+             docker build -t siddharth67/solar-system:$GIT_COMMIT .
+           '''
+     }
+   }
 
     // stage('Trivy Scan') {
     //   steps {
@@ -91,13 +92,13 @@ pipeline {
     //         '''
     //   }
     // }
-   //  stage('Publish Image - DockerHub') {
-//       steps {
-//         withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-//           sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
-//         }
-//       }
-//     }
+    stage('Publish Image - DockerHub') {
+      steps {
+        withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+          sh  'docker push siddharth67/solar-system:$GIT_COMMIT'
+        }
+      }
+    }
 
     // stage('Upload - AWS S3') {
     //   steps {
@@ -127,30 +128,77 @@ pipeline {
  //       }  
  //   }
 
-     stage('Integration Testing - EC2') {
-      when {
-        branch 'feature/*'
-      }
-      steps {
-          sh 'printenv'
+    //  stage('Integration Testing - EC2') {
+    //   when {
+    //     branch 'feature/*'
+    //   }
+    //   steps {
+    //       sh 'printenv'
           
-        }  
+    //     }  
+    // }
+
+    //      stage('Integration Testing - EC2222222222222') {
+    //   when {
+    //             expression {
+    //                 env.GIT_BRANCH.startsWith('feature')
+    //             }
+    //         }
+    //   steps {
+    //       sh 'printenv'
+          
+    //     }  
+    // }
+
+    stage('Update and Commit Image Tag') {
+      steps {
+        sh 'git clone -b main http://localhost:3000/backup-org/solar-system-gitops-argocd'
+        dir("solar-system-gitops-argocd/kubernetes") {
+          sh '''
+            git checkout main'
+            git checkout -b feature-$BUILD_ID'
+            sed -i "s#siddharth67.*#siddharth67/solar-system:$GIT_COMMIT#g" deployment.yml'
+            cat deployment.yml'
+            git config --global user.email "jenkins@dasher.com"
+            git remote set-url origin http://$GITEA_TOKEN@192.168.0.104:5555/dasher-org/solar-system-gitops-argocd
+            git checkout feature-$BUILD_ID
+            git add .
+            git commit -am "Updated docker image"
+            git push -u origin feature-$BUILD_ID
+          '''
+        }
+      }
     }
 
-         stage('Integration Testing - EC2222222222222') {
-      when {
-                expression {
-                    env.GIT_BRANCH.startsWith('feature')
-                }
-            }
+    stage('Kubernetes Deployment - Raise PR') {
       steps {
-          sh 'printenv'
-          
-        }  
-    }
+        sh """
+          curl -X 'POST' \
+            'http://192.168.0.104:5555/api/v1/repos/dasher-org/solar-system-gitops-argocd/pulls' \
+            -H 'accept: application/json' \
+            -H 'Authorization: token $GITEA_TOKEN' \
+            -H 'Content-Type: application/json' \
+            -d '{
+            "assignee": "dasher-admin",
+            "assignees": [
+              "dasher-admin"
+            ],
+            "base": "main",
+            "body": "Updated docker image in deployment manifest",
+            "head": "feature-$BUILD_ID",
+            "title": "Updated Docker Image"
+          }'
+        """
+      }
+    } 
     }
     post {
       always {
+        script {
+            if (fileExists('solar-system-gitops-argocd')) {
+            sh 'rm -rf solar-system-gitops-argocd'
+            }
+        }
         publishHTML(allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', useWrapperFileDirectly: true)
 
         junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
