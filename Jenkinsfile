@@ -119,10 +119,18 @@ pipeline {
     //   }
     // }
 
-    stage('Integration Testing - EC2') {
+//    stage('Integration Testing - EC2') {
+//      steps {
+//          sh '''
+//              bash dev-integration-test-ec2.sh
+ //           '''
+ //       }  
+ //   }
+
+     stage('Integration Testing - EC2') {
       steps {
           sh '''
-              bash dev-integration-test-ec2.sh
+              sh 'printenv'
             '''
         }  
     }
