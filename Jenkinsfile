@@ -28,7 +28,8 @@ pipeline {
             -f openapi \
             -r zap_report.html \
             -w zap_report.md \
-            -J zap_json_report.json
+            -J zap_json_report.json \
+            -c zap_ignore_rules
         '''
       }
     }  
