@@ -16,30 +16,44 @@ pipeline {
 
   stages {
 
-    stage('DAST - OWASP ZAP') {
-      steps {
-        sh '''
-                  echo $(id -u):$(id -g)
-          chmod 777 $(pwd)
-          echo $(id -u):$(id -g)  
-          #### REPLACE below with Kubernetes http://IP_Address:30000/api-docs/ #####
-          docker run -v $(pwd):/zap/wrk/:rw  ghcr.io/zaproxy/zaproxy zap-api-scan.py \
-            -t https://815f-49-206-36-222.ngrok-free.app/api-docs/ \
-            -f openapi \
-            -r zap_report.html \
-            -w zap_report.md \
-            -J zap_json_report.json \
-            -c zap_ignore_rules
-        '''
-      }
-    }  
+  stage('Install Dependencies') {
+    steps {
+      sh 'printenv'
+    sh 'npm install --no-audit'
+ }
+}
 
-  // stage('Install Dependencies') {
-//     steps {
-//       sh 'printenv'
-//     sh 'npm install --no-audit'
-//  }
-// }
+stage('dummy file') {
+    steps {
+      sh 'touch test-reposts.xml'
+      sh 'touch trivy-image-reposts.xml'
+      sh 'touch dependency-reposts.xml'
+      sh 'touch zap-reposts.xml'
+      sh 'touch reports-reposts.xml'
+      sh 'mkdir coverage'
+
+ }
+}
+
+// stage('DAST - OWASP ZAP') {
+//   steps {
+//     sh '''
+//               echo $(id -u):$(id -g)
+//       chmod 777 $(pwd)
+//       echo $(id -u):$(id -g)  
+//       #### REPLACE below with Kubernetes http://IP_Address:30000/api-docs/ #####
+//       docker run -v $(pwd):/zap/wrk/:rw  ghcr.io/zaproxy/zaproxy zap-api-scan.py \
+//         -t https://815f-49-206-36-222.ngrok-free.app/api-docs/ \
+//         -f openapi \
+//         -r zap_report.html \
+//         -w zap_report.md \
+//         -J zap_json_report.json \
+//         -c zap_ignore_rules
+//     '''
+//   }
+// }  
+
+
 //     stage('Deploy to Prod?') {
 //       when {
 //         branch 'main'
