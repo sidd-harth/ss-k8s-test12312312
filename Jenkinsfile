@@ -152,7 +152,7 @@ pipeline {
 
     stage('Update and Commit Image Tag') {
       steps {
-        sh 'git clone -b main http://localhost:3000/backup-org/solar-system-gitops-argocd'
+        sh 'git clone -b main http://192.168.0.104:5555/dasher-org/solar-system-gitops-argocd'
         dir("solar-system-gitops-argocd/kubernetes") {
           sh '''
             git checkout main
