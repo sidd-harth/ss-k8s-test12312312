@@ -56,7 +56,8 @@ pipeline {
           '''
           s3Upload(
               file: "solar-system-lambda.zip", 
-              bucket:'solar-system-lambda-bucket'
+              bucket:'solar-system-lambda-bucket',
+              pathStyleAccessEnabled: true
             )
         }
       }
