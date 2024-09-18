@@ -61,6 +61,21 @@ pipeline {
             )
           sh '''
             /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions 
+
+            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda create-function \
+            --function-name solar-system-lambda-function \
+            --runtime nodejs18.x \
+            --s3-bucket solar-system-lambda-bucket \
+            --s3-key solar-system-lambda-${BUILD_ID}.zip
+            --handler app.handler \
+            --role arn:aws:iam::000000000000:role/lambda-role
+
+/usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions 
+
+            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda update-function-code \
+            --function-name solar-system-lambda-function \
+            --s3-bucket solar-system-lambda-bucket \
+            --s3-key solar-system-lambda-${BUILD_ID}.zip
           '''
         }
       }
