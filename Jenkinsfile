@@ -15,7 +15,148 @@ pipeline {
   }
 
   stages {
+    stage('Install Dependencies') {
+      steps {
+        sh 'echo 1'
+      }
+    }
 
+    stage('Dependency Scanning') {
+      parallel {
+        stage('NPM Dependency Audit') {
+          steps {
+            sh 'echo 1'
+          }
+        }
+
+        stage('OWASP Dependency Check') {
+          steps {
+sh 'echo 1'
+            }
+          }
+        }
+      }
+
+    stage('Unit Testing') {
+        steps {
+          sh 'echo 1'
+        }
+      }
+
+    stage('Code Coverage') {
+      steps {
+        catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
+            sh 'echo 1'
+        }
+      }
+    }
+
+    stage('SonarQube - SAST') {
+      steps {
+       sh 'echo 1'
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        sh  ''' 
+              sh 'echo 1'
+        '''
+      }
+    }
+
+    stage('Trivy Scan') {
+      steps {
+        sh  ''' 
+             sh 'echo 1'
+            '''
+      }
+    }
+
+    stage('Publish Image - DockerHub') {
+      steps {
+       sh 'echo 1'
+      }
+    }
+
+    stage('Localstack - AWS S3') {
+      steps {
+        sh 'echo 1'
+      }
+    }
+
+    stage('Deploy to AWS EC2') {
+      when {
+        branch 'feature/*'
+      }
+      steps {
+        sh 'echo 1'
+      }
+    }
+
+    stage('Integration Testing - EC2') {
+      when {
+        branch 'feature/*'
+      }
+      steps {
+          sh 'echo 1'
+        }  
+    }
+
+    stage('Update and Commit Image Tag') {
+      when {
+        branch 'PR*'
+      }
+      steps {
+       sh 'echo 1'
+      }
+    }
+
+    stage('Kubernetes Deployment - Raise PR') {
+      when {
+        branch 'PR*'
+      }
+      steps {
+sh 'echo 1'
+      }
+    }
+
+    stage('DAST - OWASP ZAP') {
+      when {
+        branch 'PR*'
+      }
+      steps {
+        sh 'echo 1'
+      }
+    }
+
+    stage('Deploy to Prod?') {
+      when {
+        branch 'main'
+      }
+      steps {
+        timeout(time: 1, unit: 'DAYS') {
+          input message: 'Is the PR Merged and ArgoCD Synced?', ok: 'YES! PR is Merged and ArgoCD Application is Synced', submitter: 'admin'
+        }
+      }
+    }
+
+    stage('Lambda - S3 Upload & Deploy') {
+      when {
+        branch 'main'
+      }      
+      steps {
+        sh 'echo 1'
+      }
+    }
+    stage('Lambda - Invoke Function') {
+      when {
+        branch 'main'
+      }   
+      steps {
+        sh 'echo 1'
+      }
+    }   
     
 
 //   stage('Install Dependencies') {
