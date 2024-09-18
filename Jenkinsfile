@@ -61,7 +61,7 @@ pipeline {
               pathStyleAccessEnabled: true
             )
           sh '''
-            test=$(aws --endpoint-url http://localhost:4566 lambda list-functions | jq -r '.Functions[0].FunctionName')
+            test=$(/usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions | jq -r '.Functions[0].FunctionName')
 
             if ($test == "solar-system-lambda") {
             /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda create-function \
