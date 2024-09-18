@@ -55,7 +55,7 @@ pipeline {
             ls -ltr solar-system-lambda-$BUILD_ID.zip
           '''
           s3Upload(
-              file: "solar-system-lambda-$BUILD_ID.zip", 
+              file: "solar-system-lambda-${BUILD_ID}.zip", 
               bucket:'solar-system-lambda-bucket',
               pathStyleAccessEnabled: true
             )
