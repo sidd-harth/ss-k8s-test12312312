@@ -61,31 +61,9 @@ pipeline {
               pathStyleAccessEnabled: true
             )
           sh '''
-
-#           /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda update-function-code \
-#             --function-name solar-system-lambda-function \
-#            --s3-bucket solar-system-lambda-bucket \
-#  --s3-key solar-system-lambda-${BUILD_ID}.zip
-
           /usr/local/bin/aws --endpoint-url http://localhost:4566  lambda update-function-configuration \
           --function-name solar-system-lambda-function \
           --environment '{"Variables":{ "MONGO_USERNAME": $MONGO_USERNAME,"MONGO_PASSWORD":$MONGO_PASSWORD,"MONGO_URI":$MONGO_URI }}
-           
-            # test=$(/usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions | jq -r '.Functions[0].FunctionName')
-
-            # if $test == "solar-system-lambda-function"; then
-            # /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda create-function \
-            # --function-name solar-system-lambda-function \
-            # --runtime nodejs18.x \
-            # --zip-file fileb://solar-system-lambda-${BUILD_ID}.zip \
-            # --handler app.handler \
-            # --role arn:aws:iam::000000000000:role/lambda-role
-            # else
-            # /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda update-function-code \
-            # --function-name solar-system-lambda-function \
-            # --s3-bucket solar-system-lambda-bucket \
-            # --s3-key solar-system-lambda-${BUILD_ID}.zip
-            # fi
           '''
         }
       }
