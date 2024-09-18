@@ -60,11 +60,11 @@ pipeline {
               bucket:'solar-system-lambda-bucket',
               pathStyleAccessEnabled: true
             )
-          sh '''
+          sh """
           /usr/local/bin/aws --endpoint-url http://localhost:4566  lambda update-function-configuration \
           --function-name solar-system-lambda-function \
-          --environment '{"Variables":{ "MONGO_USERNAME": '$MONGO_USERNAME',"MONGO_PASSWORD": '$MONGO_PASSWORD',"MONGO_URI": '${MONGO_URI'" }}'
-          '''
+          --environment '{"Variables":{ "MONGO_USERNAME": ${MONGO_USERNAME},"MONGO_PASSWORD": ${MONGO_PASSWORD},"MONGO_URI": ${MONGO_URI}}}'
+          """
         }
       }
       }
