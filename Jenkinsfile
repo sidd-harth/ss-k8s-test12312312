@@ -61,19 +61,21 @@ pipeline {
               pathStyleAccessEnabled: true
             )
           sh '''
-      /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions | jq 'if .Functions[0].FunctionName == "solar-system-lambda" then
+            test=$(aws --endpoint-url http://localhost:4566 lambda list-functions | jq -r '.Functions[0].FunctionName')
+
+            if ($test == "solar-system-lambda") {
             /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda create-function \
             --function-name solar-system-lambda-function \
             --runtime nodejs18.x \
             --zip-file fileb://solar-system-lambda-${BUILD_ID}.zip \
             --handler app.handler \
             --role arn:aws:iam::000000000000:role/lambda-role
-          else 
+            } else {
             /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda update-function-code \
             --function-name solar-system-lambda-function \
             --s3-bucket solar-system-lambda-bucket \
             --s3-key solar-system-lambda-${BUILD_ID}.zip
-          fi'
+        }
           '''
         }
       }}
