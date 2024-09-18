@@ -59,17 +59,13 @@ sh 'echo 1'
 
     stage('Build Docker Image') {
       steps {
-        sh  ''' 
-              sh 'echo 1'
-        '''
+        sh 'echo 1'
       }
     }
 
     stage('Trivy Scan') {
       steps {
-        sh  ''' 
-             sh 'echo 1'
-            '''
+       sh 'echo 1'
       }
     }
 
