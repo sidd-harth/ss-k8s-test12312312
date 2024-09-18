@@ -66,7 +66,7 @@ pipeline {
             --function-name solar-system-lambda-function \
             --runtime nodejs18.x \
             --s3-bucket solar-system-lambda-bucket \
-            --s3-key solar-system-lambda-${BUILD_ID}.zip
+            --s3-key solar-system-lambda-${BUILD_ID}.zip \
             --handler app.handler \
             --role arn:aws:iam::000000000000:role/lambda-role
 
