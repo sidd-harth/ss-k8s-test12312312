@@ -51,7 +51,7 @@ pipeline {
           '''
           sh  '''
             ls
-            zip -r solar-system-lambda.zip app* package* index.html node*
+            zip -qr solar-system-lambda.zip app* package* index.html node*
             ls -ltr solar-system-lambda.zip
           '''
           s3Upload(
@@ -263,7 +263,11 @@ pipeline {
             if (fileExists('solar-system-gitops-argocd')) {
             sh 'rm -rf solar-system-gitops-argocd'
             }
+            if (fileExists('solar-system-lambda.zip')) {
+            sh 'rm -f solar-system-lambda.zip'
+            }
         }
+
         publishHTML(allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', useWrapperFileDirectly: true)
 
         junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
