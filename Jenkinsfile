@@ -16,12 +16,14 @@ pipeline {
 
   stages {
 
-  stage('Install Dependencies') {
-    steps {
-      sh 'printenv'
-    sh 'npm install --no-audit'
- }
-}
+    
+
+//   stage('Install Dependencies') {
+//     steps {
+//       sh 'printenv'
+//     sh 'npm install --no-audit'
+//  }
+// }
 
 //   stage('dummy file') {
 //     steps {
@@ -35,53 +37,53 @@ pipeline {
 //  }
 // }
 
-    stage('Lambda - S3 Upload & Deploy') {
-      steps {
-        script{
-        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
-          sh '''
-            tail -5 app.js
-            echo "************************************"
+    // stage('Lambda - S3 Upload & Deploy') {
+  //     steps {
+  //       script{
+  //       withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
+  //         sh '''
+  //           tail -5 app.js
+  //           echo "************************************"
             
-            sed -i "/^app\\.listen(3000/ s/^/\\/\\//" app.js
-            sed -i "s/^module.exports = app;/\\/\\/module.exports = app;/g" app.js
-            sed -i "s|^//module.exports.handler|module.exports.handler|" app.js
+  //           sed -i "/^app\\.listen(3000/ s/^/\\/\\//" app.js
+  //           sed -i "s/^module.exports = app;/\\/\\/module.exports = app;/g" app.js
+  //           sed -i "s|^//module.exports.handler|module.exports.handler|" app.js
 
-            echo "************************************"
-            tail -5 app.js
-          '''
-          sh  '''
-            ls
-            zip -qr solar-system-lambda-$BUILD_ID.zip app* package* index.html node*
-            ls -ltr solar-system-lambda-$BUILD_ID.zip
-          '''
-          s3Upload(
-              file: "solar-system-lambda-${BUILD_ID}.zip", 
-              bucket:'solar-system-lambda-bucket',
-              pathStyleAccessEnabled: true
-            )
-          sh """
-          /usr/local/bin/aws --endpoint-url http://localhost:4566  lambda update-function-configuration \
-          --function-name solar-system-lambda-function \
-          --environment '{"Variables":{ "MONGO_USERNAME": "${MONGO_USERNAME}","MONGO_PASSWORD": "${MONGO_PASSWORD}","MONGO_URI": "${MONGO_URI}"}}'
-          """
-        }
-      }
-      }
-    }
-    stage('Lambda - Invoke Function') {
-      steps {
-        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
-         sh '''
-            sleep 5s
-            function_url_data=$(/usr/local/bin/aws --endpoint-url http://localhost:4566  lambda get-function-url-config --function-name solar-system-lambda-function)
-            function_url=$(echo $function_url_data | jq -r '.FunctionUrl | sub("/$"; "")')
-            curl -Is  $function_url/live | grep -i "200 OK"
-         '''
-      }
-    }
+  //           echo "************************************"
+  //           tail -5 app.js
+  //         '''
+  //         sh  '''
+  //           ls
+  //           zip -qr solar-system-lambda-$BUILD_ID.zip app* package* index.html node*
+  //           ls -ltr solar-system-lambda-$BUILD_ID.zip
+  //         '''
+  //         s3Upload(
+  //             file: "solar-system-lambda-${BUILD_ID}.zip", 
+  //             bucket:'solar-system-lambda-bucket',
+  //             pathStyleAccessEnabled: true
+  //           )
+  //         sh """
+  //         /usr/local/bin/aws --endpoint-url http://localhost:4566  lambda update-function-configuration \
+  //         --function-name solar-system-lambda-function \
+  //         --environment '{"Variables":{ "MONGO_USERNAME": "${MONGO_USERNAME}","MONGO_PASSWORD": "${MONGO_PASSWORD}","MONGO_URI": "${MONGO_URI}"}}'
+  //         """
+  //       }
+  //     }
+  //     }
+  //   }
+  //   stage('Lambda - Invoke Function') {
+  //     steps {
+  //       withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
+  //        sh '''
+  //           sleep 5s
+  //           function_url_data=$(/usr/local/bin/aws --endpoint-url http://localhost:4566  lambda get-function-url-config --function-name solar-system-lambda-function)
+  //           function_url=$(echo $function_url_data | jq -r '.FunctionUrl | sub("/$"; "")')
+  //           curl -Is  $function_url/live | grep -i "200 OK"
+  //        '''
+  //     }
+  //   }
 
-    }
+  //   }
 // stage('DAST - OWASP ZAP') {
 //   steps {
 //     sh '''
