@@ -69,7 +69,19 @@ pipeline {
       }
       }
     }
+    stage('Lambda - Invoke Function') {
+      steps {
+        withAWS(credentials: 'aws-s3-bucket', region: 'us-east-2') {
+         sh '''
+            sleep 5s
+            function_url_data=$(aws lambda get-function-url-config --function-name solar-system-lambda-function)
+            function_url=$(echo $function_url_data | jq -r '.FunctionUrl | sub("/$"; "")')
+            curl -Is  $function_url/live | grep -i "200 OK"
+         '''
+      }
+    }
 
+    }
 // stage('DAST - OWASP ZAP') {
 //   steps {
 //     sh '''
