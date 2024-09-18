@@ -51,11 +51,11 @@ pipeline {
           '''
           sh  '''
             ls
-            zip -qr solar-system-lambda.zip app* package* index.html node*
-            ls -ltr solar-system-lambda.zip
+            zip -qr solar-system-lambda-$BUILD_ID.zip app* package* index.html node*
+            ls -ltr solar-system-lambda-$BUILD_ID.zip
           '''
           s3Upload(
-              file: "solar-system-lambda.zip", 
+              file: "solar-system-lambda-$BUILD_ID.zip", 
               bucket:'solar-system-lambda-bucket',
               pathStyleAccessEnabled: true
             )
@@ -263,8 +263,8 @@ pipeline {
             if (fileExists('solar-system-gitops-argocd')) {
             sh 'rm -rf solar-system-gitops-argocd'
             }
-            if (fileExists('solar-system-lambda.zip')) {
-            sh 'rm -f solar-system-lambda.zip'
+            if (fileExists('solar-system-lambda-$BUILD_ID.zip')) {
+            sh 'rm -f solar-system-lambda-$BUILD_ID.zip'
             }
         }
 
