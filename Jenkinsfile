@@ -39,7 +39,6 @@ pipeline {
       steps {
         withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
           sh '''
-            ./aws --version
             tail -5 app.js
             echo "************************************"
             
@@ -61,7 +60,7 @@ pipeline {
               pathStyleAccessEnabled: true
             )
           sh '''
-            ./aws --endpoint-url http://localhost:4566 lambda update-function-code \
+            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda update-function-code \
             --function-name solar-system-lambda-function \
             --s3-bucket solar-system-lambda-bucket \
             --s3-key solar-system-lambda-${BUILD_ID}.zip
