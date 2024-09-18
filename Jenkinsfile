@@ -37,6 +37,7 @@ pipeline {
 
     stage('Lambda - S3 Upload & Deploy') {
       steps {
+        script{
         withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
           sh '''
             tail -5 app.js
@@ -60,8 +61,7 @@ pipeline {
               pathStyleAccessEnabled: true
             )
           sh '''
-            # /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions 
-            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions | jq 'if .Functions[0].FunctionName == "solar-system-lambda" then "Match" 
+      /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions | jq 'if .Functions[0].FunctionName == "solar-system-lambda" then
             /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda create-function \
             --function-name solar-system-lambda-function \
             --runtime nodejs18.x \
@@ -73,10 +73,10 @@ pipeline {
             --function-name solar-system-lambda-function \
             --s3-bucket solar-system-lambda-bucket \
             --s3-key solar-system-lambda-${BUILD_ID}.zip
-          end'
+          fi'
           '''
         }
-      }
+      }}
     }
 
 // stage('DAST - OWASP ZAP') {
