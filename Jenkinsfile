@@ -71,7 +71,7 @@ pipeline {
     }
     stage('Lambda - Invoke Function') {
       steps {
-        withAWS(credentials: 'aws-s3-bucket', region: 'us-east-2') {
+        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
          sh '''
             sleep 5s
             function_url_data=$(aws lambda get-function-url-config --function-name solar-system-lambda-function)
