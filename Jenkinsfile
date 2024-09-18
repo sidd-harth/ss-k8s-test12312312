@@ -38,8 +38,35 @@ sh 'echo 1'
       }
 
     stage('Unit Testing') {
-        steps {
-          sh 'echo 1'
+        parallel {
+              stage('NodeJS 18') {
+                  stages {
+                      stage('Version') {
+                          steps {
+                            sh 'node -v'
+                          }
+                      }
+                      stage('Test') {
+                          steps {
+                              sh 'echo 1'
+                          }
+                      }
+                  }
+              }
+              stage('NodeJS 20') {
+                  stages {
+                      stage('Version') {
+                          steps {
+                              sh 'echo 1'
+                          }
+                      }
+                      stage('Test') {
+                          steps {
+                            sh 'echo 1'
+                          }
+                      }
+                  }
+            }
         }
       }
 
