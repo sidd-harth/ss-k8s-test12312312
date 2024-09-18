@@ -60,7 +60,7 @@ pipeline {
               pathStyleAccessEnabled: true
             )
           sh '''
-            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions --query 'Functions[].FunctionName' --output text
+            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions 
           '''
         }
       }
