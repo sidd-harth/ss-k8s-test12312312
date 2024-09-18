@@ -23,17 +23,17 @@ pipeline {
  }
 }
 
-stage('dummy file') {
-    steps {
-      sh 'touch test-reposts.xml'
-      sh 'touch trivy-image-reposts.xml'
-      sh 'touch dependency-reposts.xml'
-      sh 'touch zap-reposts.xml'
-      sh 'touch reports-reposts.xml'
-      sh 'mkdir coverage'
+//   stage('dummy file') {
+//     steps {
+//       sh 'touch test-reposts.xml'
+//       sh 'touch trivy-image-reposts.xml'
+//       sh 'touch dependency-reposts.xml'
+//       sh 'touch zap-reposts.xml'
+//       sh 'touch reports-reposts.xml'
+//       sh 'mkdir coverage'
 
- }
-}
+//  }
+// }
 
     stage('Lambda - S3 Upload & Deploy') {
       steps {
