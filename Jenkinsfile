@@ -35,6 +35,33 @@ stage('dummy file') {
  }
 }
 
+    stage('Lambda - S3 Upload & Deploy') {
+      steps {
+        withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
+          sh '''
+            tail -5 app.js
+            echo "************************************"
+            
+            sed -i "/^app\\.listen(3000/ s/^/\\/\\//" app.js
+            sed -i "s/^module.exports = app;/\\/\\/module.exports = app;/g" app.js
+            sed -i "s|^//module.exports.handler|module.exports.handler|" app.js
+
+            echo "************************************"
+            tail -5 app.js
+          '''
+          sh  '''
+            ls
+            zip -r solar-system-lambda.zip app* package* index.html node*
+            ls -ltr solar-system-lambda.zip
+          '''
+          s3Upload(
+              file: "solar-system-lambda.zip", 
+              bucket:'solar-system-lambda-bucket'
+            )
+        }
+      }
+    }
+
 // stage('DAST - OWASP ZAP') {
 //   steps {
 //     sh '''
