@@ -75,6 +75,7 @@ pipeline {
             --function-name solar-system-lambda-function \
             --s3-bucket solar-system-lambda-bucket \
             --s3-key solar-system-lambda-${BUILD_ID}.zip
+            fi
         }
           '''
         }
