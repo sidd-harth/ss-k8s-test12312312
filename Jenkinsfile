@@ -74,7 +74,7 @@ pipeline {
         withAWS(credentials: 'localstack-aws-credentials', endpointUrl: 'http://localhost:4566', region: 'us-east-1') {
          sh '''
             sleep 5s
-            function_url_data=$(/usr/local/bin/aws lambda get-function-url-config --function-name solar-system-lambda-function)
+            function_url_data=$(/usr/local/bin/aws --endpoint-url http://localhost:4566  lambda get-function-url-config --function-name solar-system-lambda-function)
             function_url=$(echo $function_url_data | jq -r '.FunctionUrl | sub("/$"; "")')
             curl -Is  $function_url/live | grep -i "200 OK"
          '''
