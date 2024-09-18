@@ -39,7 +39,7 @@ sh 'echo 1'
 
     stage('Unit Testing') {
         parallel {
-              stage('NodeJS 18') {
+              stage('N-18') {
                   stages {
                       stage('Version') {
                           steps {
@@ -53,7 +53,7 @@ sh 'echo 1'
                       }
                   }
               }
-              stage('NodeJS 20') {
+              stage('N-20') {
                   stages {
                       stage('Version') {
                           steps {
