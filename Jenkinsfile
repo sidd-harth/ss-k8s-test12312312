@@ -61,12 +61,6 @@ pipeline {
             )
           sh '''
             /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda list-functions --query 'Functions[].FunctionName' --output text
-
-
-            /usr/local/bin/aws --endpoint-url http://localhost:4566 lambda update-function-code \
-            --function-name solar-system-lambda-function \
-            --s3-bucket solar-system-lambda-bucket \
-            --s3-key solar-system-lambda-${BUILD_ID}.zip
           '''
         }
       }
