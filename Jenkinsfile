@@ -1,7 +1,11 @@
 @Library('dasher-trusted-shared-library') _
 
 pipeline {
-  agent any
+  agent {
+      kubernetes {
+          yamlFile 'k8s-agent.yaml'
+      }
+  }
 
   tools {
     nodejs 'nodejs-22-6-0'
@@ -18,7 +22,10 @@ pipeline {
   stages {
     stage('Install Dependencies') {
       steps {
-        sh 'npm install --no-audit'
+        container('node-18') {
+          sh 'node -v'
+          sh 'npm install --no-audit'
+        }
       }
     }
 
@@ -26,6 +33,7 @@ pipeline {
       parallel {
         stage('NPM Dependency Audit') {
           steps {
+            sh 'node -v'
             sh 'npm audit --audit-level=critical'
           }
         }
@@ -48,14 +56,19 @@ pipeline {
 
     stage('Unit Testing') {
         steps {
-          sh 'npm test'
+          container('node-18') {
+            sh 'node -v'
+            sh 'npm test'
+          }
         }
       }
 
     stage('Code Coverage') {
       steps {
-        catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
-            sh 'npm run coverage'
+        container('node-18') {
+          catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
+              sh 'npm run coverage'
+          }
         }
       }
     }
@@ -77,6 +90,7 @@ pipeline {
     // }
 
     stage('Build Docker Image') {
+      agent any
       steps {
         sh  ''' 
               docker build -t siddharth67/solar-system:$GIT_COMMIT .
@@ -85,6 +99,7 @@ pipeline {
     }
 
     stage('Trivy Scan') {
+      agent any
       steps {
         script {
           trivyScan.vulnerability("siddharth67/solar-system:$GIT_COMMIT")
