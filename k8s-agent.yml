@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: node-18
+    image: node:18-alpine
+    command:
+    - cat
+    tty: true
+  - name: node-19
+    image: node:19-alpine
+    command:
+    - cat
+    tty: true
+  - name: git
+    image: alpine/git
+    command:
+    - cat
+    tty: true
