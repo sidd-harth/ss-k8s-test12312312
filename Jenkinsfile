@@ -4,6 +4,7 @@ pipeline {
   agent {
       kubernetes {
           yamlFile 'k8s-agent.yaml'
+          defaultContainer 'node-18'
       }
   }
 
