@@ -66,6 +66,7 @@ pipeline {
               stage('NodeJS 19') {
                   steps {
                       container('node-19') {
+                          sh 'sleep10s'
                           sh 'node -v'
                           sh 'npm test'
                       }
