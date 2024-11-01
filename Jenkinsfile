@@ -23,9 +23,17 @@ pipeline {
   stages {
     stage('Install Dependencies') {
       steps {
-          sh 'node -v'
-          sh 'npm install --no-audit'
-          stash(name: 'solar-system-node-modules', includes: 'node_modules/')
+         cache(maxCacheSize: 550, caches: [
+             arbitraryFileCache(
+               cacheName: 'npm-dependency-cache',
+               cacheValidityDecidingFile: 'package-lock.json',
+               includes: '**/*',
+               path: 'node_modules')
+           ]) {
+            sh 'node -v'
+            sh 'npm install --no-audit'
+            stash(name: 'solar-system-node-modules', includes: 'node_modules/')
+         }
       }
     }
 
