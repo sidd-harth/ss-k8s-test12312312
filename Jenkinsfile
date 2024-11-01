@@ -304,8 +304,8 @@ pipeline {
     //   }
     // }   
     }
-    post {
-      always {
+  //  post {
+//      always {
         // script {
         //     if (fileExists('solar-system-gitops-argocd')) {
         //     sh 'rm -rf solar-system-gitops-argocd'
@@ -324,6 +324,6 @@ pipeline {
 
               
        // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
-      }
-    }
+   //   }
+ //   }
 }
