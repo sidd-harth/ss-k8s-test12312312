@@ -34,8 +34,10 @@ pipeline {
       parallel {
         stage('NPM Dependency Audit') {
           steps {
-            sh 'node -v'
-            sh 'npm audit --audit-level=critical'
+            container('node-18') {
+              sh 'node -v'
+              sh 'npm audit --audit-level=critical'
+            }
           }
         }
 
