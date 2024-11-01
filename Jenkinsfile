@@ -23,10 +23,9 @@ pipeline {
   stages {
     stage('Install Dependencies') {
       steps {
-        container('node-18') {
           sh 'node -v'
           sh 'npm install --no-audit'
-        }
+        
       }
     }
 
@@ -34,10 +33,9 @@ pipeline {
       parallel {
         stage('NPM Dependency Audit') {
           steps {
-            container('node-18') {
               sh 'node -v'
               sh 'npm audit --audit-level=critical'
-            }
+            
           }
         }
 
@@ -59,19 +57,17 @@ pipeline {
 
     stage('Unit Testing') {
         steps {
-          container('node-18') {
             sh 'node -v'
             sh 'npm test'
-          }
+          
         }
       }
 
     stage('Code Coverage') {
       steps {
-        container('node-18') {
           catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
               sh 'npm run coverage'
-          }
+          
         }
       }
     }
