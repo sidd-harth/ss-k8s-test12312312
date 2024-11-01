@@ -55,13 +55,35 @@ pipeline {
         }
       }
 
-    stage('Unit Testing') {
-        steps {
-            sh 'node -v'
-            sh 'npm test'
-          
-        }
-      }
+      stage('Unit Testing') {
+          parallel {
+              stage('NodeJS 18') {
+                  steps {
+                      sh 'node -v'
+                      sh 'npm test'
+                  }
+              }
+              stage('NodeJS 19') {
+                  steps {
+                      container('node-19') {
+                          sh 'node -v'
+                          sh 'npm test'
+                      }
+                  }
+              }
+              stage('NodeJS 20') {
+                  agent {
+                      docker {
+                          image 'node:20-alpine'
+                      }
+                  }
+                  steps {
+                      sh 'node -v'
+                      sh 'npm test'
+                  }
+              }
+          }
+      }    
 
     stage('Code Coverage') {
       steps {
