@@ -1,8 +1,6 @@
 node {
     env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
     env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-    env.MONGO_USERNAME = credentials('mongo-db-username')
-    env.MONGO_PASSWORD = credentials('mongo-db-password')
     env.MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
     
     stage('Checkout') {
@@ -15,6 +13,8 @@ node {
     }
 
     stage('Unit Testing') {
-        sh 'npm test'
+        withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
+            sh 'npm test'
+        }
     }
 }
