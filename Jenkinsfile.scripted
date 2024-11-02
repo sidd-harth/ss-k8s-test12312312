@@ -1,14 +1,20 @@
 node {
     env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
     env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+    env.MONGO_USERNAME = credentials('mongo-db-username')
+    env.MONGO_PASSWORD = credentials('mongo-db-password')
+    env.MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
     
     stage('Checkout') {
         checkout scm
     }
 
-
     stage('Installing Dependencies') {
         sh 'npm install --no-audit'
         stash(name: 'solar-system-node-modules', includes: 'node_modules/')
+    }
+
+    stage('Unit Testing') {
+        sh 'npm test'
     }
 }
