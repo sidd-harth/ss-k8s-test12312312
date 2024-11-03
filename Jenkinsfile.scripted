@@ -15,8 +15,10 @@ podTemplate {
     
         stage('Unit Testing') {
             node('dasher-nodejs') {
-                withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
-                    sh 'npm test'
+                container('node-18') {
+                    withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
+                        sh 'npm test'
+                    }
                 }
             }
         }
