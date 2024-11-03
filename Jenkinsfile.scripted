@@ -17,6 +17,7 @@ podTemplate {
             node('dasher-nodejs') {
                 container('node-18') {
                     checkout scm
+                    unstash 'solar-system-node-modules'
                     withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
                         sh 'npm test'
                     }
