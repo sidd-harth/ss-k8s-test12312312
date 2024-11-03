@@ -1,4 +1,4 @@
-node {
+node('ubuntu-docker') {
     env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
     env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
     env.MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
