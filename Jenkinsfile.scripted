@@ -16,6 +16,7 @@ podTemplate {
         stage('Unit Testing') {
             node('dasher-nodejs') {
                 container('node-18') {
+                    checkout scm
                     withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
                         sh 'npm test'
                     }
