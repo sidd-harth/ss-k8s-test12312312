@@ -1,20 +1,24 @@
-node('ubuntu-docker') {
-    env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
-    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-    env.MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
+podTemplate {
+    node('ubuntu-docker') {
+        env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
+        env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+        env.MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
+        
+        stage('Checkout') {
+            checkout scm
+        }
     
-    stage('Checkout') {
-        checkout scm
-    }
-
-    stage('Installing Dependencies') {
-        sh 'npm install --no-audit'
-        stash(name: 'solar-system-node-modules', includes: 'node_modules/')
-    }
-
-    stage('Unit Testing') {
-        withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
-            sh 'npm test'
+        stage('Installing Dependencies') {
+            sh 'npm install --no-audit'
+            stash(name: 'solar-system-node-modules', includes: 'node_modules/')
+        }
+    
+        stage('Unit Testing') {
+            node('dasher-nodejs') {
+                withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
+                    sh 'npm test'
+                }
+            }
         }
     }
 }
