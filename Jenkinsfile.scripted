@@ -6,7 +6,11 @@ node {
     properties([
         disableConcurrentBuilds(abortPrevious: true)
     ])
-        
+
+    stage('Checkout') {
+        checkout scm
+    }
+
     wrap([$class: 'TimestamperBuildWrapper']) {
         stage('Installing Dependencies') {
             cache(maxCacheSize: 550, caches: [
