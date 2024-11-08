@@ -88,7 +88,7 @@ pipeline {
                 stage('NodeJS 20') {
                     agent {
                         docker {
-                            image 'node:20-alpine'
+                            image 'node:18-alpine'
                         }
                     }
                     stages {
@@ -97,7 +97,7 @@ pipeline {
                     retry(2)
                   }
                         steps {
-                          sh 'export npm_config_cache=npm-cache'
+                         // sh 'export npm_config_cache=npm-cache'
                           sh 'node -v'
                           sh 'npm install --no-audit'
                         }
