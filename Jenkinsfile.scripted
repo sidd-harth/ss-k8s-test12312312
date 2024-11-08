@@ -1,0 +1,25 @@
+node {
+
+    env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
+    env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
+
+    properties([
+        disableConcurrentBuilds(abortPrevious: true)
+    ])
+        
+    wrap([$class: 'TimestamperBuildWrapper']) {
+        stage('Installing Dependencies') {
+            cache(maxCacheSize: 550, caches: [
+                arbitraryFileCache(
+                cacheName: 'npm-dependency-cache',
+                cacheValidityDecidingFile: 'package-lock.json',
+                includes: '**/*',
+                path: 'node_modules')
+            ]) {
+                sh 'node -v'
+                sh 'npm install --no-audit'
+                stash(name: 'solar-system-node-modules', includes: 'node_modules/')
+            }
+        }
+    }
+}
