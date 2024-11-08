@@ -31,7 +31,7 @@ node {
     stage('Unit Tests') {
         node ('ubuntu-docker') {
             checkout scm
-            unstash 'node-modules'
+            unstash 'solar-system-node-modules'
             sh 'node -v'
             withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
                 sh 'ls -ltr'
