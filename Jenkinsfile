@@ -88,6 +88,7 @@ pipeline {
                     agent {
                         docker {
                             image 'node:20-alpine'
+                            customWorkspace '/var/lib'
                         }
                     }
                     options { retry(2) }
