@@ -1,4 +1,4 @@
-@Library('dasher-trusted-shared-library@featureTrivyScan') _
+//@Library('dasher-trusted-shared-library@featureTrivyScan') _
 
 
 pipeline {
@@ -145,28 +145,28 @@ pipeline {
             }
         }
 
-        stage('Trivy Vulnerability Scanner') {
-            agent any
-            steps {
-                script {
-                    trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"LOW", exitCode:"0")
-                    trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"MEDIUM", exitCode:"0")
-                    trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"HIGH", exitCode:"0")
-                    trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"CRITICAL", exitCode:"1")
-                }
-            }
-            post {
-                always {
-                    script {
-                        trivyScan.reportsConverter()
-                    }
+        // stage('Trivy Vulnerability Scanner') {
+        //     agent any
+        //     steps {
+        //         script {
+        //             trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"LOW", exitCode:"0")
+        //             trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"MEDIUM", exitCode:"0")
+        //             trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"HIGH", exitCode:"0")
+        //             trivyScanScript.vulnerability(imageName:"siddharth67/solar-system:$GIT_COMMIT", severity:"CRITICAL", exitCode:"1")
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             script {
+        //                 trivyScan.reportsConverter()
+        //             }
                     
-                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
+        //             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
 
-                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-MEDIUM-results.html', reportName: 'Trivy Image Medium Vul Report', reportTitles: '', useWrapperFileDirectly: true])
-                }
-            }
-        } 
+        //             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-MEDIUM-results.html', reportName: 'Trivy Image Medium Vul Report', reportTitles: '', useWrapperFileDirectly: true])
+        //         }
+        //     }
+        // } 
 
         // stage('Push Docker Image') {
         //     steps {
@@ -390,30 +390,30 @@ pipeline {
         // }
     }
 
-    post {
-        always {
-            slackNotification("${currentBuild.result}")
+    // post {
+    //     always {
+    //         slackNotification("${currentBuild.result}")
             
-            // script {
-            //     if (fileExists('solar-system-gitops-argocd')) {
-            //         sh 'rm -rf solar-system-gitops-argocd'
-            //     }
-            // }
+    //         // script {
+    //         //     if (fileExists('solar-system-gitops-argocd')) {
+    //         //         sh 'rm -rf solar-system-gitops-argocd'
+    //         //     }
+    //         // }
 
-            // junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
-            // junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml' 
-            // junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-image-CRITICAL-results.xml'
-            // junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-image-MEDIUM-results.xml'
+    //         // junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+    //         // junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml' 
+    //         // junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-image-CRITICAL-results.xml'
+    //         // junit allowEmptyResults: true, stdioRetention: '', testResults: 'trivy-image-MEDIUM-results.xml'
 
-            // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'zap_report.html', reportName: 'DAST - OWASP ZAP Report', reportTitles: '', useWrapperFileDirectly: true])
+    //         // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'zap_report.html', reportName: 'DAST - OWASP ZAP Report', reportTitles: '', useWrapperFileDirectly: true])
 
-            // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
+    //         // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-results.html', reportName: 'Trivy Image Critical Vul Report', reportTitles: '', useWrapperFileDirectly: true])
 
-            // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-MEDIUM-results.html', reportName: 'Trivy Image Medium Vul Report', reportTitles: '', useWrapperFileDirectly: true])
+    //         // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'trivy-image-MEDIUM-results.html', reportName: 'Trivy Image Medium Vul Report', reportTitles: '', useWrapperFileDirectly: true])
 
-            // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+    //         // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
 
-            // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
+    //         // publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+    //     }
+    // }
 }
