@@ -30,6 +30,7 @@ pipeline {
 
     stages {
         stage('Installing Dependencies') {
+            agent any
             options { timestamps() }
             steps {
                 cache( caches: [
