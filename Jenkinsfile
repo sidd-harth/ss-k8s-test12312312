@@ -89,13 +89,23 @@ pipeline {
                     agent {
                         docker {
                             image 'node:20-alpine'
-                            //customWorkspace '/var/lib'
                         }
                     }
-                    options { retry(2) }
-                    steps {
-                        sh 'node -v'
-                        sh 'npm test' 
+                    stages {
+                      stage ("Install NPM") {
+                        steps {
+                          sh 'node -v'
+                          sh 'npm install --no-audit'
+                        }
+                      }
+                      
+                      stage ("Testing") {
+                        options { retry(2) }
+                        steps {
+                          sh 'node -v'
+                          sh 'npm test' 
+                        }
+                      }
                     }
                 }
             }
