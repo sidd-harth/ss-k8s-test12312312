@@ -97,7 +97,7 @@ pipeline {
                     retry(2)
                   }
                         steps {
-                          sh 'chown -R 105:108 "~/.npm"'
+                          sh 'export npm_config_cache=npm-cache'
                           sh 'node -v'
                           sh 'npm install --no-audit'
                         }
