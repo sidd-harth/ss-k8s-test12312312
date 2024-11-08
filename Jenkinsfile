@@ -33,7 +33,7 @@ pipeline {
             agent any
             options { timestamps() }
             steps {
-                cache( caches: [
+                cache(maxCacheSize: 550, caches: [
                   arbitraryFileCache(
                     cacheName: 'npm-dependency-cache',
                     cacheValidityDecidingFile: 'package-lock.json',
