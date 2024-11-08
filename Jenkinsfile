@@ -78,6 +78,7 @@ pipeline {
                     options { retry(2) }
                     steps {
                         container('node-19') {
+                            sh 'sleep 10s'
                             sh 'node -v'
                             sh 'npm test' 
                         }
@@ -88,7 +89,7 @@ pipeline {
                     agent {
                         docker {
                             image 'node:20-alpine'
-                            customWorkspace '/var/lib'
+                            //customWorkspace '/var/lib'
                         }
                     }
                     options { retry(2) }
