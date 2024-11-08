@@ -32,7 +32,7 @@ pipeline {
         stage('Installing Dependencies') {
             options { timestamps() }
             steps {
-                cache(maxCacheSize: 550, caches: [
+                cache( caches: [
                   arbitraryFileCache(
                     cacheName: 'npm-dependency-cache',
                     cacheValidityDecidingFile: 'package-lock.json',
