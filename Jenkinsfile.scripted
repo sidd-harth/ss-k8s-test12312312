@@ -1,4 +1,4 @@
-podTemplate(label: 'nodejs-pod', containers: [
+podTemplate(cloud: 'dasher-prod-k8s-us-east', label: 'nodejs-pod', containers: [
     containerTemplate(name: 'node-18', image: 'node:18-alpine', ttyEnabled: true, command: 'cat', privileged: true),
     containerTemplate(name: 'node-19', image: 'node:19-alpine', ttyEnabled: true, command: 'cat', privileged: true)
 ]) {
