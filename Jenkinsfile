@@ -99,7 +99,7 @@ pipeline {
                         steps {
                          // sh 'export npm_config_cache=npm-cache'
                           sh 'node -v'
-                          sh 'npm install --no-audit'
+                          sh 'sudo npm install --no-audit'
                         }
                       }
                       
