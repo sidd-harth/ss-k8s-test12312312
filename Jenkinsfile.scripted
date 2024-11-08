@@ -45,7 +45,7 @@ podTemplate(label: 'nodejs-pod', containers: [
     }
 
     stage('Code Coverage') {
-        node('ubuntu-docker') {
+        node('nodejs-pod') {
             container('node-19') {
                 checkout scm
                 unstash 'solar-system-node-modules'
