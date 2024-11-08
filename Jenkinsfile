@@ -80,6 +80,7 @@ pipeline {
                     options { retry(2) }
                     steps {
                         sh 'node -v'
+                        unstash 'solar-system-node-modules'
                         sh 'npm test' 
                     }
                 }
@@ -89,6 +90,7 @@ pipeline {
                     steps {
                         container('node-19') {
                             sh 'sleep 10s'
+                            unstash 'solar-system-node-modules'
                             sh 'node -v'
                             sh 'npm test' 
                         }
