@@ -29,7 +29,7 @@ node {
     }
 
     stage('Unit Tests') {
-        node ('nodejs-pod') {
+        node ('ubuntu-docker') {
             checkout scm
             unstash 'node-modules'
             sh 'node -v'
