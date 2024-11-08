@@ -97,6 +97,8 @@ pipeline {
                     retry(2)
                   }
                         steps {
+                          sh 'ls -ltr'
+                          sh 'npm cache clean --force'
                           sh 'node -v'
                           sh 'npm install --no-audit'
                         }
