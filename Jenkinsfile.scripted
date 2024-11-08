@@ -1,4 +1,8 @@
-node {
+podTemplate(label: 'nodejs-pod', containers: [
+    containerTemplate(name: 'node-18', image: 'node:18-alpine', ttyEnabled: true, command: 'cat', privileged: true),
+    containerTemplate(name: 'node-19', image: 'node:19-alpine', ttyEnabled: true, command: 'cat', privileged: true)
+]) {
+    node {
 
     env.NODEJS_HOME = "${tool 'nodejs-22-6-0'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
@@ -36,6 +40,18 @@ node {
             withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', usernameVariable: 'MONGO_USERNAME', passwordVariable: 'MONGO_PASSWORD')]) {
                 sh 'ls -ltr'
                 sh 'npm test'
+            }
+        }
+    }
+
+    stage('Code Coverage') {
+        node('ubuntu-docker') {
+            container('node-19') {
+                checkout scm
+                unstash 'solar-system-node-modules'
+                catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in future releases', stageResult: 'UNSTABLE') {
+                    sh 'npm run coverage'
+                }
             }
         }
     }
