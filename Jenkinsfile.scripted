@@ -33,7 +33,7 @@ podTemplate(cloud: 'dasher-prod-k8s-us-east', label: 'nodejs-pod', containers: [
     }
 
     stage('Unit Tests') {
-        node ('ubuntu-docker') {
+       
             checkout scm
             unstash 'solar-system-node-modules'
             sh 'node -v'
@@ -41,7 +41,7 @@ podTemplate(cloud: 'dasher-prod-k8s-us-east', label: 'nodejs-pod', containers: [
                 sh 'ls -ltr'
                 sh 'npm test'
             }
-        }
+        
     }
 
     stage('Code Coverage') {
